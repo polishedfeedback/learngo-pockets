@@ -1,7 +1,15 @@
-pkg main
+package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
-func main(){
-  // Will be completed
+func main() {
+	bookworms, err := loadBookworms("testdata/bookworms.json")
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "failed to load bookworms: ")
+		os.Exit(1)
+	}
+	fmt.Println(bookworms)
 }
