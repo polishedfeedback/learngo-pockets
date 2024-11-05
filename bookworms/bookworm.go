@@ -1,33 +1,36 @@
 package main
 
 import (
-  "os"
-  "encoding/json"
+	"encoding/json"
+	"os"
 )
 
 type Bookworm struct {
-  Name string `json: "name"`
-  Book []Books `json: "books"`
+	Name  string `json "name"`
+	Books []Book `json "books"`
 }
 
-type Books struct {
-  Author string `json: "author"`
-  Title string `json: "title"`
+type Book struct {
+	Title  string
+	Author string
 }
 
+// loadBookworms reads the file and returns the list of Bookworms or an error if something goes wrong
 func loadBookworms(filePath string) ([]Bookworm, error) {
+	// Opening a file (for read access) will give file descriptor and an error
+	f, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
 
-  // Read the file 
-  f, err := os.Open(filePath)
-  if err != nil{
-    return nil, err
-  }
-  defer f.close()
-  // Decode the json from the file using encoder package
-  var bookworms []Bookworm
-  err = json.NewDecoder(f).Decode(&bookworms)
-  if err != nil {
-    return nil, err
-  }
-  return bookworms, nil
+	var bookworms []Bookworm
+
+	err = json.NewDecoder(f).Decode(&bookworms)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return bookworms, nil
 }
